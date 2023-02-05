@@ -10,6 +10,7 @@ import connectDB from "./config/db.js";
 import UserRoutes from "./routes/UserRoutes.js";
 import UploadRoutes from "./routes/UploadRoutes.js";
 import ResetPasswordRoutes from "./routes/ResetPasswordRoutes.js";
+import AuthRoutes from "./routes/AuthRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 
 app.use("/api/users", UserRoutes);
 app.use("/api/upload", UploadRoutes);
+app.use("/api/auth", AuthRoutes);
 app.use("/api/reset-password", ResetPasswordRoutes);
 
 const __dirname = path.resolve();

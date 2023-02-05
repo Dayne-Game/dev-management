@@ -15,11 +15,13 @@ import TimeLog from './pages/TimeLog';
 function App() {
 
   useEffect(() => {
+    TokenExpiryCheck();
+
     const interval = setInterval(() => {
       if(localStorage.getItem('token')) {
         TokenExpiryCheck();
       }
-    }, 10000)
+    }, 2*60*1000)
 
     return () => clearInterval(interval);
   }, []);

@@ -12,7 +12,7 @@ const Login = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if(user && await user.matchPassword(password)) {
-        res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }))
+        res.json(GenerateToken({ name: user.name, email: user.email, image: user.image }))
     } else {
         res.status(400); throw new Error("Email or Password is Invalid");
     }
@@ -43,7 +43,7 @@ const Register = asyncHandler(async(req, res) => {
 
 	const user = await new_user.save();
 
-	res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }));
+	res.json(GenerateToken({ name: user.name, email: user.email, image: user.image }));
 });
 
 // @DESC	Get Logged in User Details
@@ -53,7 +53,7 @@ const Current = asyncHandler(async(req, res) => {
 	const user = await User.findById(req.user._id);
 
 	if(user) {
-		res.json({ id: user._id, name: user.name, email: user.email, image: user.image })
+		res.json({ name: user.name, email: user.email, image: user.image })
 	} else {
 		res.status(404); throw new Error('User not Found');
 	}
@@ -63,7 +63,7 @@ const Current = asyncHandler(async(req, res) => {
 // @ROUTE   /api/users/update/
 // @ACCESS  PRIVATE
 const Update = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user.id)
+	const user = await User.findOne(req.user.email)
 
 	if (user) {
 
@@ -86,7 +86,7 @@ const Update = asyncHandler(async (req, res) => {
 
 		const updatedUser = await user.save()
 
-		res.json(GenerateToken({ id: updatedUser._id, name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
+		res.json(GenerateToken({ name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
 	} else {
 		res.status(404)
 		throw new Error('User not found')
@@ -97,7 +97,7 @@ const Update = asyncHandler(async (req, res) => {
 // @ROUTE   /api/users/delete/:id
 // @ACCESS  PRIVATE
 const Delete = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user._id);
+	const user = await User.findOne(req.user.email);
 
 	if (user) {
 		await user.remove()

@@ -1,18 +1,20 @@
-import jwt_decode from "jwt-decode"
+import axios from "axios";
 
 export const TokenExpiryCheck = () => {
-
-    var token = localStorage.getItem('token');
-
-    var exp = jwt_decode(token).exp;
-
-    let expiry = exp - 120; // Minus 2 minutes off actual expiry
-
-    if(Date.now() >= expiry * 1000) {
-        localStorage.clear();
-        document.location.href = "/login"
-        return true
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`,
+        },
     }
 
-    console.log('checked...');
+    if(!localStorage.getItem('token')) {
+        return false;
+    }
+
+    axios.get('/api/auth/validate-token-expiry', config).then((response) => {
+        if(!response.data) {
+            localStorage.clear();
+            document.location.href = "/login"
+        }
+    })
 }
